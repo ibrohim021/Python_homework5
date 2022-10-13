@@ -3,48 +3,35 @@
 
 
 
-with open('ex4/file_encode.txt', 'w') as data:
-    data.write('WWWWWWWWWWWWBWWWWWWWWWWWWBBBWWWWWWWWWWWWWWWWWWWWWWWWBWWWWWWWWWWWWWW')
+from curses.ascii import isdigit
+
+
+
+   
 
 with open('ex4/file_encode.txt', 'r') as data:
     string = data.readline()
+    print(string)
+    ZipDig  = f'{string.count("w")}w{string.count("b")}b{string.count("r")}r{string.count("t")}t'
+    print(ZipDig)
 
-def rle_encode(decoded_string):
-    encoded_string = ''
-    count = 1
-    char = decoded_string[0]
-    for i in range(1, len(decoded_string)):
-        if decoded_string[i] == char:
-            count += 1
-        else:
-            encoded_string = encoded_string + str(count) + char
-            char = decoded_string[i]
-            count = 1
-            encoded_string = encoded_string + str(count) + char
-    return encoded_string
+    
+unZip = ''
+zip = ''
 
-
-def rle_decode(encoded_string):
-    decoded_string = ''
-    char_amount = ''
-    for i in range(len(encoded_string)):
-        if encoded_string[i].isdigit():
-            char_amount += encoded_string[i]
-        else:
-            decoded_string += encoded_string[i] * int(char_amount)
-        char_amount = ''
-    print(decoded_string)
-
-    return decoded_string
+for i in ZipDig:
+    if i.isdigit():
+        zip += i
+    else:
+        unZip += str(int(zip)* i)
+        zip = ''
+print(unZip)
 
 
-with open('ex4/file_encode.txt', 'r') as file:
-    decoded_string = file.read()
 
 with open('ex4/file_decode.txt', 'w') as file:
-    encoded_string = rle_encode(decoded_string)
+    encoded_string = ZipDig
+    decoding_string = unZip
+    file.write(f'{decoding_string}\n')
     file.write(encoded_string)
 
-print('Decoded string: \t' + decoded_string)
-print('Encoded string: \t' + rle_encode(decoded_string))
-print(f'Compress ratio: \t{round(len(decoded_string) / len(encoded_string), 1)}')
